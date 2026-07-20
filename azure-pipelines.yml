@@ -17,7 +17,7 @@ steps:
     displayName: "Install Node.js 18"
 
   # ── Step 2: Install all npm packages (from package.json) ─────
-  - script: npm ci
+  - script: npm install
     displayName: "Install npm dependencies"
 
   # ── Step 3: Install Playwright browsers ──────────────────────
