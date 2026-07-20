@@ -1,0 +1,39 @@
+# =============================================================
+# azure-pipelines.yml
+# Purpose: Run Playwright TypeScript tests on every push to main
+# =============================================================
+
+trigger:
+  - main
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  # ── Step 1: Install the correct Node.js version ──────────────
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "18.x"
+    displayName: "Install Node.js 18"
+
+  # ── Step 2: Install all npm packages (from package.json) ─────
+  - script: npm ci
+    displayName: "Install npm dependencies"
+
+  # ── Step 3: Install Playwright browsers ──────────────────────
+  - script: npx playwright install --with-deps
+    displayName: "Install Playwright browsers and OS dependencies"
+
+  # ── Step 4: Run the Playwright test suite ────────────────────
+  - script: npx playwright test
+    displayName: "Run Playwright tests"
+    continueOnError: true
+
+  # ── Step 5: Publish the HTML report as a downloadable artifact ─
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: "playwright-report"
+      artifact: "playwright-html-report"
+      publishLocation: "pipeline"
+    displayName: "Publish Playwright HTML Report"
+    condition: always()
