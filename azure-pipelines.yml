@@ -11,7 +11,7 @@ pool:
 
 steps:
   # ── Step 1: Install the correct Node.js version ──────────────
-  - task: NodeTool@0
+  - task: NodeTool@1
     inputs:
       versionSpec: "18.x"
     displayName: "Install Node.js 18"
