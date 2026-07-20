@@ -10,26 +10,28 @@ pool:
   vmImage: "ubuntu-latest"
 
 steps:
-  # ── Step 1: Install the correct Node.js version ──────────────
-  - task: NodeTool@1
-    inputs:
-      versionSpec: "18.x"
-    displayName: "Install Node.js 18"
+  # ── Step 1: Install Node.js 18 via NodeSource (reliable method) ──
+  - script: |
+      curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+      sudo apt-get install -y nodejs
+      node --version
+      npm --version
+    displayName: "Install Node.js 18 via NodeSource"
 
-  # ── Step 2: Install all npm packages (from package.json) ─────
+  # ── Step 2: Install all npm packages (from package.json) ─────────
   - script: npm install
     displayName: "Install npm dependencies"
 
-  # ── Step 3: Install Playwright browsers ──────────────────────
+  # ── Step 3: Install Playwright browsers ──────────────────────────
   - script: npx playwright install --with-deps
     displayName: "Install Playwright browsers and OS dependencies"
 
-  # ── Step 4: Run the Playwright test suite ────────────────────
+  # ── Step 4: Run the Playwright test suite ────────────────────────
   - script: npx playwright test
     displayName: "Run Playwright tests"
     continueOnError: true
 
-  # ── Step 5: Publish the HTML report as a downloadable artifact ─
+  # ── Step 5: Publish the HTML report as a downloadable artifact ───
   - task: PublishPipelineArtifact@1
     inputs:
       targetPath: "playwright-report"
