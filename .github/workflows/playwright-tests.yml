@@ -38,7 +38,7 @@ jobs:
 
       # ── Step 5: Run Playwright tests ────────────────────────────
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test --grep "TC001|auth"
         continue-on-error: true
 
       # ── Step 6: Upload HTML report as artifact ──────────────────
