@@ -25,7 +25,7 @@ test.describe('Day 18 - Network Interception with page.route()', () => {
         console.log('[VERIFY] Login successful!');
     });
 
-    test.only('TC002 - Mock the translations API to return fake data', async ({ page }) => {
+    test('TC002 - Mock the translations API to return fake data', async ({ page }) => {
         await page.route('**/web/index.php/core/i18n/messages', async (route) => {
             console.log('[MOCK] Faking translation response');
             await route.fulfill({
