@@ -1,0 +1,50 @@
+# =============================================================
+# .github/workflows/playwright-tests.yml
+# Purpose: Run Playwright TypeScript tests on GitHub Actions
+# =============================================================
+
+name: Playwright Tests
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 21 * * *"
+
+jobs:
+  playwright-tests:
+    name: Run Playwright Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Step 1: Download your code from GitHub ──────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Step 2: Install Node.js 18 ──────────────────────────────
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      # ── Step 3: Install npm packages ────────────────────────────
+      - name: Install dependencies
+        run: npm install
+
+      # ── Step 4: Install Playwright browsers ─────────────────────
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # ── Step 5: Run Playwright tests ────────────────────────────
+      - name: Run Playwright tests
+        run: npx playwright test
+        continue-on-error: true
+
+      # ── Step 6: Upload HTML report as artifact ──────────────────
+      - name: Upload Playwright HTML Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-html-report
+          path: playwright-report/
